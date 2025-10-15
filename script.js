@@ -61,7 +61,7 @@ class SPARouter {
 
     // Handle card clicks with route data
     document.addEventListener('click', (e) => {
-      const card = e.target.closest('.card[data-route]');
+      const card = e.target.closest('.service-card[data-route]');
       if (card) {
         e.preventDefault();
         const route = card.getAttribute('data-route');
@@ -174,9 +174,8 @@ class SPARouter {
     // Initialize carousel if present
     this.initCarousel();
     
-    // Initialize hizmetler cards if on home page
+    // Initialize home page functionality
     if (route === 'home') {
-      this.initHizmetlerCards();
       this.updateHomeGallery();
     }
     
@@ -225,10 +224,10 @@ const carouselEl = document.querySelector('.carousel');
       const link = slide.getAttribute('data-link');
         if (link && link.startsWith('#')) {
           const targetRoute = link.substring(1);
-          if (['hizmetler', 'galeri', 'iletisim'].includes(targetRoute)) {
+          if (['hizmetler', 'iletisim'].includes(targetRoute)) {
             this.navigateTo(targetRoute);
           }
-      }
+        }
     });
   });
 
@@ -246,96 +245,6 @@ const carouselEl = document.querySelector('.carousel');
   startCarousel();
 }
 
-  // Hizmetler cards background rotation functionality
-  initHizmetlerCards() {
-    const hizmetlerCards = document.querySelectorAll('#hizmetler .card');
-    if (hizmetlerCards.length === 0) return;
-
-    // Get images from the categorization system
-    const getImagesForCategory = (category) => {
-      if (window.imageCategories && window.imageCategories[category]) {
-        return window.imageCategories[category].map(img => img.path);
-      }
-      // Fallback to hardcoded images if categorization not ready
-      const fallbackImages = {
-        tabela: [
-          'img/Ürünler/Orta_1486480855.jpg',
-          'img/Ürünler/Orta_1486482356.jpg',
-          'img/Ürünler/Orta_1486483109.jpg'
-        ],
-        baski: [
-          'img/Ürünler/Orta_1486535081.jpg',
-          'img/Ürünler/Orta_1486537357.jpg',
-          'img/Ürünler/Orta_1486538658.jpg'
-        ],
-        arac: [
-          'img/Ürünler/Orta_1400865271.jpg',
-          'img/Ürünler/Orta_1402578914.jpg',
-          'img/Ürünler/Orta_1488521005.jpg'
-        ]
-      };
-      return fallbackImages[category] || [];
-    };
-
-    hizmetlerCards.forEach(card => {
-      const category = card.getAttribute('data-category');
-      const images = getImagesForCategory(category);
-      
-      if (!images || images.length === 0) return;
-
-      // Create background container and overlay
-      const backgroundContainer = document.createElement('div');
-      backgroundContainer.className = 'card-background';
-      
-      const overlay = document.createElement('div');
-      overlay.className = 'card-overlay';
-
-      // Insert background and overlay into card
-      card.appendChild(backgroundContainer);
-      card.appendChild(overlay);
-
-      let currentImageIndex = 0;
-
-      function showNextImage() {
-        // Move to next image
-        currentImageIndex = (currentImageIndex + 1) % images.length;
-        
-        // Create new image element
-        const img = document.createElement('div');
-        img.style.backgroundImage = `url(${images[currentImageIndex]})`;
-        img.style.backgroundSize = 'cover';
-        img.style.backgroundPosition = 'center';
-        img.style.backgroundRepeat = 'no-repeat';
-        img.style.position = 'absolute';
-        img.style.top = '0';
-        img.style.left = '0';
-        img.style.width = '100%';
-        img.style.height = '100%';
-        img.style.opacity = '0';
-        img.style.transition = 'opacity 1s ease-in-out';
-        
-        // Add to background container
-        backgroundContainer.appendChild(img);
-        
-        // Fade in new image
-        setTimeout(() => {
-          img.style.opacity = '1';
-        }, 50);
-        
-        // Remove old images (keep only the last 2)
-        const allImages = backgroundContainer.querySelectorAll('div');
-        if (allImages.length > 2) {
-          allImages[0].remove();
-        }
-      }
-
-      // Start with first image
-      showNextImage();
-      
-      // Set up rotation interval
-      setInterval(showNextImage, 4500);
-    });
-}
 
 // Subnav gallery toggling on Hizmetler page
   initSubnav(hash = null) {
@@ -432,7 +341,7 @@ const subnavLinks = document.querySelectorAll('.subnav-link');
     const galleryItems = document.querySelectorAll('.gallery-preview .gallery-item');
     galleryItems.forEach(item => {
       item.addEventListener('click', () => {
-        this.navigateTo('galeri');
+        this.navigateTo('hizmetler');
       });
     });
   }

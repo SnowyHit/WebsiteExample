@@ -2,22 +2,34 @@
     font-family: 'Segoe UI', sans-serif;
     margin: 0;
     padding: 0;
-    background: #f5f5f5;
+    background: #f8f9fa;
     color: #333;
 }
 
 header {
-    background-color: #222;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
     color: white;
     padding: 20px;
     text-align: center;
+    border-bottom: 3px solid #000;
+}
+
+.logo-container {
+    margin-bottom: 15px;
+}
+
+.logo {
+    height: 60px;
+    width: auto;
+    filter: brightness(0) invert(1);
 }
 
 nav {
-    background-color: #333;
+    background-color: #000;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    border-bottom: 2px solid #dc2626;
 }
 
 nav a {
@@ -28,11 +40,11 @@ nav a {
 }
 
 nav a:hover {
-    background-color: #555;
+    background-color: #dc2626;
 }
 
 nav a.active {
-    background-color: #25D366;
+    background-color: #dc2626;
     color: #fff;
     font-weight: bold;
     border-radius: 4px;
@@ -45,6 +57,14 @@ section {
     margin: auto;
 }
 
+section h2 {
+    text-align: center;
+    color: #dc2626;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
 .card-container {
     display: flex;
     flex-wrap: wrap;
@@ -52,86 +72,66 @@ section {
     justify-content: center;
 }
 
-.card {
+.service-card {
     background: white;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    padding: 20px;
-    max-width: 300px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    padding: 25px 20px;
+    max-width: 280px;
     text-align: center;
-    position: relative;
-    overflow: hidden;
-    min-height: 200px;
     cursor: pointer;
     text-decoration: none;
     color: inherit;
     display: block;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
 }
 
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.2);
+    border-color: #dc2626;
 }
 
-.card-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-    z-index: 1;
+.service-card h3 {
+    color: #dc2626;
+    margin-bottom: 12px;
+    font-size: 1.3rem;
+    font-weight: bold;
 }
 
-.card-background.active {
-    opacity: 1;
-}
-
-.card-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.6);
-    z-index: 2;
-    transition: background 0.3s ease;
-}
-
-.card:hover .card-overlay {
-    background: rgba(0,0,0,0.5);
-}
-
-.card h3,
-.card p {
-    position: relative;
-    z-index: 3;
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+.service-card p {
+    color: #666;
+    line-height: 1.5;
+    margin: 0;
 }
 
 .whatsapp-btn {
-    background-color: #25D366;
+    background: linear-gradient(135deg, #25D366, #20c55e);
     color: white;
     padding: 12px 24px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
     display: inline-block;
     margin-top: 20px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3);
+}
+
+.whatsapp-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
 }
 
 footer {
-    background-color: #222;
+    background: linear-gradient(135deg, #000, #1a1a1a);
     color: white;
     padding: 20px;
     text-align: center;
+    border-top: 3px solid #dc2626;
 }
 
 .subnav {
@@ -153,9 +153,9 @@ footer {
     background: #e2e2e2;
 }
 .subnav-link.active {
-    background: #25D366;
+    background: #dc2626;
     color: #fff;
-    border-color: #25D366;
+    border-color: #dc2626;
 }
 
 .gallery {
@@ -247,8 +247,8 @@ footer {
     transition: all 0.3s ease;
 }
 .indicator.active {
-    background: #25D366;
-    border-color: #25D366;
+    background: #dc2626;
+    border-color: #dc2626;
     transform: scale(1.2);
 }
 
@@ -362,7 +362,7 @@ footer {
 
 .btn-primary {
     display: inline-block;
-    background: linear-gradient(135deg, #25D366, #20c55e);
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
     color: white;
     padding: 15px 30px;
     border-radius: 8px;
@@ -370,13 +370,15 @@ footer {
     font-weight: bold;
     font-size: 1.1rem;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+    border: 2px solid transparent;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
-    background: linear-gradient(135deg, #20c55e, #25D366);
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+    background: linear-gradient(135deg, #b91c1c, #dc2626);
+    border-color: #000;
 }
 
 .content-grid {
@@ -422,18 +424,22 @@ footer {
 }
 
 .phone-btn {
-    background-color: #007bff;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
     color: white;
     padding: 12px 24px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 1rem;
     cursor: pointer;
-    transition: background 0.3s ease;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
 }
 
 .phone-btn:hover {
-    background-color: #0056b3;
+    background: linear-gradient(135deg, #b91c1c, #dc2626);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
 }
 
 .references-grid {
@@ -468,6 +474,9 @@ footer {
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
+    .logo {
+        height: 50px;
+    }
     nav {
         flex-direction: column;
         align-items: stretch;
@@ -483,9 +492,9 @@ footer {
         align-items: center;
         gap: 15px;
     }
-    .card {
+    .service-card {
         max-width: 100%;
-        min-height: 180px;
+        padding: 20px 15px;
     }
     .carousel {
         height: 40vh;
@@ -521,6 +530,9 @@ footer {
 }
 
 @media (max-width: 480px) {
+    .logo {
+        height: 45px;
+    }
     section {
         padding: 20px 15px;
     }
@@ -532,14 +544,13 @@ footer {
         font-size: 1.5rem;
         padding: 15px 10px 10px 10px;
     }
-    .card {
+    .service-card {
         padding: 15px;
-        min-height: 160px;
     }
-    .card h3 {
+    .service-card h3 {
         font-size: 1.2rem;
     }
-    .card p {
+    .service-card p {
         font-size: 0.9rem;
     }
     .gallery {
