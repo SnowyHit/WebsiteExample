@@ -87,17 +87,112 @@ if (carouselEl) {
   startCarousel();
 }
 
+// Hizmetler cards background rotation functionality
+function initHizmetlerCards() {
+  const hizmetlerCards = document.querySelectorAll('#hizmetler .card');
+  if (hizmetlerCards.length === 0) return;
+
+  // Define image arrays for each category
+  const imageCategories = {
+    tabela: [
+      'img/Ürünler/Orta_1486480855.jpg',
+      'img/Ürünler/Orta_1486482356.jpg',
+      'img/Ürünler/Orta_1486483109.jpg'
+    ],
+    baski: [
+      'img/Ürünler/Orta_1486535081.jpg',
+      'img/Ürünler/Orta_1486537357.jpg',
+      'img/Ürünler/Orta_1486538658.jpg'
+    ],
+    arac: [
+      'img/Ürünler/Orta_1400865271.jpg',
+      'img/Ürünler/Orta_1402578914.jpg',
+      'img/Ürünler/Orta_1488521005.jpg'
+    ]
+  };
+
+  hizmetlerCards.forEach(card => {
+    const category = card.getAttribute('data-category');
+    const images = imageCategories[category];
+    
+    if (!images || images.length === 0) return;
+
+    // Create background container and overlay
+    const backgroundContainer = document.createElement('div');
+    backgroundContainer.className = 'card-background';
+    
+    const overlay = document.createElement('div');
+    overlay.className = 'card-overlay';
+
+    // Insert background and overlay into card
+    card.appendChild(backgroundContainer);
+    card.appendChild(overlay);
+
+    let currentImageIndex = 0;
+
+    function showNextImage() {
+      // Remove active class from current image
+      const currentActive = backgroundContainer.querySelector('.active');
+      if (currentActive) {
+        currentActive.classList.remove('active');
+      }
+
+      // Move to next image
+      currentImageIndex = (currentImageIndex + 1) % images.length;
+      
+      // Create new image element
+      const img = document.createElement('div');
+      img.style.backgroundImage = `url(${images[currentImageIndex]})`;
+      img.style.backgroundSize = 'cover';
+      img.style.backgroundPosition = 'center';
+      img.style.backgroundRepeat = 'no-repeat';
+      img.style.position = 'absolute';
+      img.style.top = '0';
+      img.style.left = '0';
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.opacity = '0';
+      img.style.transition = 'opacity 1s ease-in-out';
+      
+      // Add to background container
+      backgroundContainer.appendChild(img);
+      
+      // Fade in new image
+      setTimeout(() => {
+        img.style.opacity = '1';
+      }, 50);
+      
+      // Remove old images (keep only the last 2)
+      const allImages = backgroundContainer.querySelectorAll('div');
+      if (allImages.length > 2) {
+        allImages[0].remove();
+      }
+    }
+
+    // Start with first image
+    showNextImage();
+    
+    // Set up rotation interval
+    setInterval(showNextImage, 4500);
+  });
+}
+
+// Initialize hizmetler cards when page loads
+document.addEventListener('DOMContentLoaded', initHizmetlerCards);
+
 // Subnav gallery toggling on Hizmetler page
 const subnavLinks = document.querySelectorAll('.subnav-link');
 if (subnavLinks.length) {
   const galleries = document.querySelectorAll('.gallery');
-  subnavLinks.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const target = btn.getAttribute('data-target');
+  
+  // Function to activate a specific tab
+  function activateTab(target) {
+    const targetBtn = document.querySelector(`[data-target="${target}"]`);
+    if (targetBtn) {
       // Update active button
       subnavLinks.forEach((b) => {
-        b.classList.toggle('active', b === btn);
-        b.setAttribute('aria-selected', b === btn ? 'true' : 'false');
+        b.classList.toggle('active', b === targetBtn);
+        b.setAttribute('aria-selected', b === targetBtn ? 'true' : 'false');
       });
       // Show selected gallery, hide others
       galleries.forEach((gal) => {
@@ -109,6 +204,20 @@ if (subnavLinks.length) {
       if (activeGallery) {
         activeGallery.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+    }
+  }
+  
+  // Check URL hash on page load and activate corresponding tab
+  const hash = window.location.hash.substring(1); // Remove the # symbol
+  if (hash && ['tabela', 'baski', 'arac'].includes(hash)) {
+    activateTab(hash);
+  }
+  
+  // Add click event listeners
+  subnavLinks.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-target');
+      activateTab(target);
     });
   });
 }
