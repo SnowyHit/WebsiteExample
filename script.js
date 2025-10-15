@@ -13,27 +13,27 @@ class SPARouter {
     this.handleInitialRoute();
   }
 
-  // Inject shared header/footer for all pages and set active nav
+// Inject shared header/footer for all pages and set active nav
   async injectPartials() {
-    const headerContainer = document.createElement('div');
-    const footerContainer = document.createElement('div');
-    headerContainer.setAttribute('data-partial', 'header');
-    footerContainer.setAttribute('data-partial', 'footer');
+  const headerContainer = document.createElement('div');
+  const footerContainer = document.createElement('div');
+  headerContainer.setAttribute('data-partial', 'header');
+  footerContainer.setAttribute('data-partial', 'footer');
 
-    // Insert at top/bottom of body
-    document.body.insertBefore(headerContainer, document.body.firstChild);
-    document.body.appendChild(footerContainer);
+  // Insert at top/bottom of body
+  document.body.insertBefore(headerContainer, document.body.firstChild);
+  document.body.appendChild(footerContainer);
 
-    try {
-      const [headerRes, footerRes] = await Promise.all([
-        fetch('partials/header.html'),
-        fetch('partials/footer.html')
-      ]);
-      const [headerHtml, footerHtml] = await Promise.all([
-        headerRes.text(), footerRes.text()
-      ]);
-      headerContainer.innerHTML = headerHtml;
-      footerContainer.innerHTML = footerHtml;
+  try {
+    const [headerRes, footerRes] = await Promise.all([
+      fetch('partials/header.html'),
+      fetch('partials/footer.html')
+    ]);
+    const [headerHtml, footerHtml] = await Promise.all([
+      headerRes.text(), footerRes.text()
+    ]);
+    headerContainer.innerHTML = headerHtml;
+    footerContainer.innerHTML = footerHtml;
 
       this.setupNavigationEvents();
     } catch (e) {
@@ -177,100 +177,109 @@ class SPARouter {
     // Initialize hizmetler cards if on home page
     if (route === 'home') {
       this.initHizmetlerCards();
+      this.updateHomeGallery();
     }
     
     // Initialize subnav if on hizmetler page
     if (route === 'hizmetler') {
       this.initSubnav(hash);
     }
+    
   }
 
   // Carousel functionality
   initCarousel() {
-    const carouselEl = document.querySelector('.carousel');
+const carouselEl = document.querySelector('.carousel');
     if (!carouselEl) return;
 
-    const slides = document.querySelectorAll('.carousel-slide');
-    const indicators = document.querySelectorAll('.indicator');
-    let currentSlide = 0;
-    let interval;
+  const slides = document.querySelectorAll('.carousel-slide');
+  const indicators = document.querySelectorAll('.indicator');
+  let currentSlide = 0;
+  let interval;
 
-    function showSlide(index) {
-      slides.forEach((slide, i) => {
-        slide.classList.toggle('active', i === index);
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
         if (indicators[i]) {
-          indicators[i].classList.toggle('active', i === index);
+      indicators[i].classList.toggle('active', i === index);
         }
-      });
-      currentSlide = index;
-    }
+    });
+    currentSlide = index;
+  }
 
-    function nextSlide() {
-      let next = (currentSlide + 1) % slides.length;
-      showSlide(next);
-    }
+  function nextSlide() {
+    let next = (currentSlide + 1) % slides.length;
+    showSlide(next);
+  }
 
-    function startCarousel() {
-      interval = setInterval(nextSlide, 3000);
-    }
+  function startCarousel() {
+    interval = setInterval(nextSlide, 3000);
+  }
 
-    function stopCarousel() {
-      clearInterval(interval);
-    }
+  function stopCarousel() {
+    clearInterval(interval);
+  }
 
-    slides.forEach((slide) => {
-      slide.addEventListener('click', () => {
-        const link = slide.getAttribute('data-link');
+  slides.forEach((slide) => {
+    slide.addEventListener('click', () => {
+      const link = slide.getAttribute('data-link');
         if (link && link.startsWith('#')) {
           const targetRoute = link.substring(1);
           if (['hizmetler', 'galeri', 'iletisim'].includes(targetRoute)) {
             this.navigateTo(targetRoute);
           }
-        }
-      });
+      }
     });
+  });
 
-    indicators.forEach((indicator, i) => {
-      indicator.addEventListener('click', () => {
-        showSlide(i);
-      });
+  indicators.forEach((indicator, i) => {
+    indicator.addEventListener('click', () => {
+      showSlide(i);
     });
+  });
 
-    carouselEl.addEventListener('mouseenter', stopCarousel);
-    carouselEl.addEventListener('mouseleave', startCarousel);
+  carouselEl.addEventListener('mouseenter', stopCarousel);
+  carouselEl.addEventListener('mouseleave', startCarousel);
 
-    // Initialize
-    showSlide(0);
-    startCarousel();
-  }
+  // Initialize
+  showSlide(0);
+  startCarousel();
+}
 
   // Hizmetler cards background rotation functionality
   initHizmetlerCards() {
     const hizmetlerCards = document.querySelectorAll('#hizmetler .card');
     if (hizmetlerCards.length === 0) return;
 
-    // Define image arrays for each category
-    const imageCategories = {
-      tabela: [
-        'img/Ürünler/Orta_1486480855.jpg',
-        'img/Ürünler/Orta_1486482356.jpg',
-        'img/Ürünler/Orta_1486483109.jpg'
-      ],
-      baski: [
-        'img/Ürünler/Orta_1486535081.jpg',
-        'img/Ürünler/Orta_1486537357.jpg',
-        'img/Ürünler/Orta_1486538658.jpg'
-      ],
-      arac: [
-        'img/Ürünler/Orta_1400865271.jpg',
-        'img/Ürünler/Orta_1402578914.jpg',
-        'img/Ürünler/Orta_1488521005.jpg'
-      ]
+    // Get images from the categorization system
+    const getImagesForCategory = (category) => {
+      if (window.imageCategories && window.imageCategories[category]) {
+        return window.imageCategories[category].map(img => img.path);
+      }
+      // Fallback to hardcoded images if categorization not ready
+      const fallbackImages = {
+        tabela: [
+          'img/Ürünler/Orta_1486480855.jpg',
+          'img/Ürünler/Orta_1486482356.jpg',
+          'img/Ürünler/Orta_1486483109.jpg'
+        ],
+        baski: [
+          'img/Ürünler/Orta_1486535081.jpg',
+          'img/Ürünler/Orta_1486537357.jpg',
+          'img/Ürünler/Orta_1486538658.jpg'
+        ],
+        arac: [
+          'img/Ürünler/Orta_1400865271.jpg',
+          'img/Ürünler/Orta_1402578914.jpg',
+          'img/Ürünler/Orta_1488521005.jpg'
+        ]
+      };
+      return fallbackImages[category] || [];
     };
 
     hizmetlerCards.forEach(card => {
       const category = card.getAttribute('data-category');
-      const images = imageCategories[category];
+      const images = getImagesForCategory(category);
       
       if (!images || images.length === 0) return;
 
@@ -326,34 +335,34 @@ class SPARouter {
       // Set up rotation interval
       setInterval(showNextImage, 4500);
     });
-  }
+}
 
-  // Subnav gallery toggling on Hizmetler page
+// Subnav gallery toggling on Hizmetler page
   initSubnav(hash = null) {
-    const subnavLinks = document.querySelectorAll('.subnav-link');
+const subnavLinks = document.querySelectorAll('.subnav-link');
     if (subnavLinks.length === 0) return;
     
-    const galleries = document.querySelectorAll('.gallery');
+  const galleries = document.querySelectorAll('.gallery');
     
     // Function to activate a specific tab
     const activateTab = (target) => {
       const targetBtn = document.querySelector(`[data-target="${target}"]`);
       if (targetBtn) {
-        // Update active button
-        subnavLinks.forEach((b) => {
+      // Update active button
+      subnavLinks.forEach((b) => {
           b.classList.toggle('active', b === targetBtn);
           b.setAttribute('aria-selected', b === targetBtn ? 'true' : 'false');
-        });
-        // Show selected gallery, hide others
-        galleries.forEach((gal) => {
-          const isTarget = gal.getAttribute('data-gallery') === target;
-          gal.classList.toggle('hidden', !isTarget);
-        });
-        // Scroll into view of the first visible gallery
-        const activeGallery = document.querySelector('.gallery:not(.hidden)');
-        if (activeGallery) {
-          activeGallery.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+      });
+      // Show selected gallery, hide others
+      galleries.forEach((gal) => {
+        const isTarget = gal.getAttribute('data-gallery') === target;
+        gal.classList.toggle('hidden', !isTarget);
+      });
+      // Scroll into view of the first visible gallery
+      const activeGallery = document.querySelector('.gallery:not(.hidden)');
+      if (activeGallery) {
+        activeGallery.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
       }
     };
     
@@ -370,6 +379,64 @@ class SPARouter {
       });
     });
   }
+
+  // Update home gallery with categorized images
+  updateHomeGallery() {
+    const galleryPreview = document.querySelector('.gallery-preview');
+    if (!galleryPreview || !window.imageCategories) return;
+
+    // Clear existing content
+    galleryPreview.innerHTML = '';
+
+    // Get random images from each category
+    const categories = ['tabela', 'baski', 'arac'];
+    const categoryNames = {
+      tabela: 'Tabela Üretimi',
+      baski: 'Dijital Baskı',
+      arac: 'Araç Kaplama'
+    };
+
+    categories.forEach(category => {
+      const images = window.imageCategories[category] || [];
+      if (images.length > 0) {
+        // Get 2 random images from this category
+        const randomImages = this.getRandomImages(images, 2);
+        
+        randomImages.forEach(image => {
+          const galleryItem = document.createElement('div');
+          galleryItem.className = 'gallery-item';
+          galleryItem.innerHTML = `
+            <img src="${image.path}" alt="${categoryNames[category]}">
+            <div class="gallery-overlay">
+              <span>${categoryNames[category]}</span>
+            </div>
+          `;
+          galleryPreview.appendChild(galleryItem);
+        });
+      }
+    });
+
+    // Add click handlers for gallery items
+    this.addGalleryClickHandlers();
+  }
+
+  // Helper method to get random images
+  getRandomImages(images, count) {
+    if (images.length === 0) return [];
+    const shuffled = [...images].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, Math.min(count, images.length));
+  }
+
+  // Add click handlers to gallery items
+  addGalleryClickHandlers() {
+    const galleryItems = document.querySelectorAll('.gallery-preview .gallery-item');
+    galleryItems.forEach(item => {
+      item.addEventListener('click', () => {
+        this.navigateTo('galeri');
+      });
+    });
+  }
+
 }
 
 // Initialize the SPA router when DOM is loaded
