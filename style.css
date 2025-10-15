@@ -7,7 +7,7 @@
 }
 
 header {
-    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    background: linear-gradient(135deg, #000000, #af1919);
     color: white;
     padding: 20px;
     text-align: center;
@@ -19,9 +19,8 @@ header {
 }
 
 .logo {
-    height: 100px;
+    height: 300px;
     width: auto;
-    filter: brightness(0) invert(1);
 }
 
 nav {
@@ -475,7 +474,7 @@ footer {
 /* Mobile responsiveness */
 @media (max-width: 768px) {
     .logo {
-        height: 50px;
+        height: 200px;
     }
     nav {
         flex-direction: column;
@@ -531,7 +530,7 @@ footer {
 
 @media (max-width: 480px) {
     .logo {
-        height: 45px;
+        height: 150px;
     }
     section {
         padding: 20px 15px;
