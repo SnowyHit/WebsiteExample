@@ -5,21 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hizmetler | ER Reklam</title>
   <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
 </head>
 <body>
-<header>
-  <h1>ER Reklam</h1>
-  <p>Balıkesir'de Tabela & Dijital Baskı Hizmetleri</p>
-</header>
-<nav>
-  <a href="index.html">Anasayfa</a>
-  <a href="hakkimizda.html">Hakkımızda</a>
-  <a href="hizmetler.html" class="active">Hizmetler</a>
-  <a href="galeri.html">Galeri</a>
-  <a href="referanslar.html">Referanslar</a>
-  <a href="blog.html">Blog</a>
-  <a href="iletisim.html">İletişim</a>
-</nav>
+<!-- header and nav injected by script.js -->
 <main>
   <section>
     <h2>Hizmetlerimiz</h2>
@@ -33,10 +22,33 @@
       <li>Ve daha fazlası...</li>
     </ul>
   </section>
+
+  <section>
+    <div class="subnav" role="tablist" aria-label="Hizmet Kategorileri">
+      <button class="subnav-link active" data-target="tabela" role="tab" aria-selected="true">Tabela</button>
+      <button class="subnav-link" data-target="baski" role="tab" aria-selected="false">Dijital Baskı</button>
+      <button class="subnav-link" data-target="arac" role="tab" aria-selected="false">Araç Kaplama</button>
+    </div>
+
+    <div class="gallery" id="gallery-tabela" data-gallery="tabela">
+      <div class="gallery-item"><img src="img/Ürünler/Orta_1486480855.jpg" alt="Tabela 1"></div>
+      <div class="gallery-item"><img src="img/Ürünler/Orta_1486482356.jpg" alt="Tabela 2"></div>
+      <div class="gallery-item"><img src="img/Ürünler/Orta_1486483109.jpg" alt="Tabela 3"></div>
+    </div>
+
+    <div class="gallery hidden" id="gallery-baski" data-gallery="baski">
+      <div class="gallery-item"><img src="img/Ürünler/Orta_1486535081.jpg" alt="Baskı 1"></div>
+      <div class="gallery-item"><img src="img/Ürünler/Orta_1486537357.jpg" alt="Baskı 2"></div>
+      <div class="gallery-item"><img src="img/Ürünler/Orta_1486538658.jpg" alt="Baskı 3"></div>
+    </div>
+
+    <div class="gallery hidden" id="gallery-arac" data-gallery="arac">
+      <div class="gallery-item"><img src="img/Ürünler/Orta_1400865271.jpg" alt="Araç 1"></div>
+      <div class="gallery-item"><img src="img/Ürünler/Orta_1402578914.jpg" alt="Araç 2"></div>
+      <div class="gallery-item"><img src="img/Ürünler/Orta_1488521005.jpg" alt="Araç 3"></div>
+    </div>
+  </section>
 </main>
-<footer>
-  <p>Adres: Altıeylül Mahallesi, Okul Sokak No:10, Balıkesir | Telefon: 0123 456 78 90 | E-posta: info@erreklam.com</p>
-  <p>&copy; 2025 ER Reklam. Tüm hakları saklıdır.</p>
-</footer>
+<!-- footer injected by script.js -->
 </body>
 </html> 
