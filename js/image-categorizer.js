@@ -5,14 +5,20 @@ class ImageCategorizer {
       tabela: [],
       baski: [],
       arac: [],
+      hediye: [],
+      plaket: [],
+      promosyon: [],
       slide: [],
       other: []
     };
     
     this.categoryKeywords = {
-      tabela: ['tabela', 'sign', 'board', 'plaque', 'signage'],
-      baski: ['baski', 'print', 'poster', 'vinyl', 'banner', 'afis'],
-      arac: ['arac', 'vehicle', 'car', 'truck', 'bus', 'wrap'],
+      tabela: ['tabela'],
+      plaket:['plaket'],
+      hediye:['hediye'],
+      promosyon:['promosyon'],
+      baski: ['baski'],
+      arac: ['arac'],
       slide: ['slide', 'hero', 'main', 'banner', 'carousel']
     };
     
@@ -159,6 +165,9 @@ class ImageCategorizer {
       tabela: [],
       baski: [],
       arac: [],
+      plaket: [],
+      promosyon: [],
+      hediye: [],
       slide: [],
       other: []
     };
