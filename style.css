@@ -25,6 +25,7 @@ body {
     border-radius: 12px;
     padding: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    scrollbar-gutter: stable;
 }
 
 .sidebar-toggle {
@@ -161,7 +162,7 @@ body {
   .sidebar-toggle { display: none; }
 
   /* Keep side-nav visible on mobile */
-  .hizmetler-sidebar .side-nav { display: block; padding: 8px; }
+  .hizmetler-sidebar .side-nav { display: block; padding: 8px; max-height: 60vh; overflow-y: auto; }
 
   /* Hide separate subnav rows on mobile; use nested view instead */
   .hizmetler-sidebar .subnav,
@@ -201,6 +202,14 @@ body {
     background: #dc2626;
     color: #fff;
     border-color: #dc2626;
+  }
+}
+
+/* Desktop: keep nav box height stable and scroll inside */
+@media (min-width: 769px) {
+  .hizmetler-sidebar .side-nav {
+    height: calc(100vh - 140px);
+    overflow-y: auto;
   }
 }
 
