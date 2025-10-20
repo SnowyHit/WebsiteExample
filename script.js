@@ -255,6 +255,9 @@ const carouselEl = document.querySelector('.carousel');
 
     const secondaryNav = document.getElementById('subcategory-nav');
     const galleryEl = document.getElementById('gallery');
+    const sidebarEl = document.querySelector('.hizmetler-sidebar');
+    const toggleBtn = document.querySelector('.sidebar-toggle');
+    const mobileNestedNav = document.querySelector('.mobile-nested-nav');
 
     const isImagesReady = () => Boolean(window.imageCategories);
 
@@ -279,6 +282,16 @@ const carouselEl = document.querySelector('.carousel');
       ? hash
       : (primaryLinks[0]?.getAttribute('data-target') || 'tabela');
 
+    const categoryDisplayNames = {
+      tabela: 'Tabela',
+      baski: 'Dijital Baskı',
+      arac: 'Araç Kaplama',
+      promosyon: 'Promosyon',
+      plaket: 'Plaket',
+      hediye: 'Hediye'
+    };
+    const allPrimaryCategories = ['tabela', 'baski', 'arac', 'promosyon', 'plaket', 'hediye'];
+
     const renderGallery = (category, subcat) => {
       if (!galleryEl) return;
       const images = getCategoryImages(category).filter(img => !subcat || img.subcategory === subcat);
@@ -286,6 +299,57 @@ const carouselEl = document.querySelector('.carousel');
         `<div class="gallery-item"><img src="${image.path}" alt="${image.name || category}"></div>`
       )).join('');
       galleryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    const renderMobileNestedUI = (activeCategory, activeSub = null) => {
+      if (!mobileNestedNav) return;
+      const getSubcatButtons = (cat, selectedSub) => {
+        const subcats = getSubcategories(cat);
+        if (subcats.length === 0) return '';
+        return `<div class="nested-subcats">${
+          subcats.map(sc => `
+            <button class="nested-subcat-btn ${selectedSub === sc ? 'active' : ''}" data-parent="${cat}" data-subcat="${sc}">
+              ${(sc || '').replace(/-/g, ' ')}
+            </button>
+          `).join('')
+        }</div>`;
+      };
+
+      mobileNestedNav.innerHTML = allPrimaryCategories.map(cat => {
+        const openAttr = cat === activeCategory ? ' open' : '';
+        return `
+          <details class="nested-group" data-cat="${cat}"${openAttr}>
+            <summary>${categoryDisplayNames[cat] || cat}</summary>
+            ${getSubcatButtons(cat, cat === activeCategory ? activeSub : null)}
+          </details>
+        `;
+      }).join('');
+
+      // Wire up events
+      mobileNestedNav.querySelectorAll('summary').forEach((summaryEl) => {
+        summaryEl.addEventListener('click', () => {
+          const group = summaryEl.parentElement;
+          const cat = group?.getAttribute('data-cat');
+          if (cat) setActiveCategory(cat);
+        });
+      });
+      mobileNestedNav.querySelectorAll('.nested-subcat-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const parent = btn.getAttribute('data-parent');
+          const sub = btn.getAttribute('data-subcat');
+          if (!parent || !sub) return;
+          if (parent !== currentCategory) {
+            setActiveCategory(parent);
+          }
+          renderSecondary(currentCategory, sub);
+          renderGallery(currentCategory, sub);
+          if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches && sidebarEl && toggleBtn) {
+            sidebarEl.classList.remove('open');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+          }
+        });
+      });
     };
 
     const renderSecondary = (category, preferredActiveSub = null) => {
@@ -331,6 +395,7 @@ const carouselEl = document.querySelector('.carousel');
       window.history.pushState({ route: 'hizmetler', hash: category }, '', `#hizmetler#${category}`);
       const activeSub = renderSecondary(category, null);
       renderGallery(category, activeSub);
+      renderMobileNestedUI(currentCategory, activeSub);
     };
 
     primaryLinks.forEach((btn) => {
@@ -339,6 +404,13 @@ const carouselEl = document.querySelector('.carousel');
         if (target) setActiveCategory(target);
       });
     });
+
+    if (toggleBtn && sidebarEl) {
+      toggleBtn.addEventListener('click', () => {
+        const isOpen = sidebarEl.classList.toggle('open');
+        toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+    }
 
     if (!isImagesReady()) {
       const onReady = () => {
