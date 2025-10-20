@@ -81,7 +81,53 @@ body {
     box-shadow: 0 2px 10px rgba(220, 38, 38, 0.25);
 }
 
-.mobile-nested-nav { display: none; }
+/* Use nested sidebar UI on all viewports */
+.mobile-nested-nav { display: block; }
+
+/* Hide separate primary/secondary subnav rows inside hizmetler sidebar by default */
+.hizmetler-sidebar .subnav,
+.hizmetler-sidebar #subcategory-nav { display: none; }
+
+/* Nested groups styling (shared for desktop & mobile) */
+.mobile-nested-nav .nested-group {
+    margin-bottom: 8px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background: #fafafa;
+    padding: 6px 8px;
+}
+.mobile-nested-nav summary {
+    list-style: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: #333;
+}
+.mobile-nested-nav details summary::-webkit-details-marker { display: none; }
+.mobile-nested-nav .nested-subcats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-top: 6px;
+}
+.mobile-nested-nav .nested-subcat-btn {
+    background: #eee;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 6px 10px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.mobile-nested-nav .nested-subcat-btn.active {
+    background: #dc2626;
+    color: #fff;
+    border-color: #dc2626;
+}
+
+/* Highlight active/open category summary */
+.mobile-nested-nav details[open] > summary {
+    color: #111;
+}
 
 /* Mobile: collapse sidebar and show nested structure */
 @media (max-width: 768px) {
