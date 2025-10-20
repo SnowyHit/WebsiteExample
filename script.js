@@ -256,7 +256,7 @@ const carouselEl = document.querySelector('.carousel');
     const secondaryNav = document.getElementById('subcategory-nav');
     const galleryEl = document.getElementById('gallery');
     const sidebarEl = document.querySelector('.hizmetler-sidebar');
-    const toggleBtn = document.querySelector('.sidebar-toggle');
+    const toggleBtn = null; // toggle removed; categories always visible
     const mobileNestedNav = document.querySelector('.mobile-nested-nav');
 
     const isImagesReady = () => Boolean(window.imageCategories);
@@ -319,10 +319,10 @@ const carouselEl = document.querySelector('.carousel');
       mobileNestedNav.innerHTML = allPrimaryCategories.map(cat => {
         const openAttr = cat === activeCategory ? ' open' : '';
         const title = categoryDisplayNames[cat] || cat;
-        const suffix = (cat === activeCategory && activeSub) ? ` — ${activeSub.replace(/-/g, ' ')}` : '';
+        // Remove dynamic suffix to keep summary width consistent
         return `
           <details class="nested-group" data-cat="${cat}"${openAttr}>
-            <summary>${title}${suffix}</summary>
+            <summary>${title}</summary>
             ${getSubcatButtons(cat, cat === activeCategory ? activeSub : null)}
           </details>
         `;
@@ -330,10 +330,22 @@ const carouselEl = document.querySelector('.carousel');
 
       // Wire up events
       mobileNestedNav.querySelectorAll('summary').forEach((summaryEl) => {
-        summaryEl.addEventListener('click', () => {
+        summaryEl.addEventListener('click', (e) => {
+          e.preventDefault();
           const group = summaryEl.parentElement;
           const cat = group?.getAttribute('data-cat');
-          if (cat) setActiveCategory(cat);
+          if (!cat) return;
+          // Toggle open state manually for consistent behavior
+          const willOpen = !group.hasAttribute('open');
+          mobileNestedNav.querySelectorAll('details.nested-group').forEach(d => {
+            if (d !== group) d.removeAttribute('open');
+          });
+          if (willOpen) {
+            group.setAttribute('open', '');
+          } else {
+            group.removeAttribute('open');
+          }
+          setActiveCategory(cat);
         });
       });
       mobileNestedNav.querySelectorAll('.nested-subcat-btn').forEach((btn) => {
@@ -410,12 +422,7 @@ const carouselEl = document.querySelector('.carousel');
       });
     });
 
-    if (toggleBtn && sidebarEl) {
-      toggleBtn.addEventListener('click', () => {
-        const isOpen = sidebarEl.classList.toggle('open');
-        toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      });
-    }
+    // Sidebar toggle removed; keep categories open across viewports
 
     if (!isImagesReady()) {
       const onReady = () => {
