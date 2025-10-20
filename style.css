@@ -555,6 +555,26 @@ footer {
     margin: 30px 0;
 }
 
+/* Instagram section */
+#instagram {
+    border-top: 1px solid #eee;
+}
+#instagram .instagram-widget {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+#instagram .insta-fallback { color: #666; font-size: 0.95rem; }
+#instagram .insta-fallback a { color: #dc2626; text-decoration: underline; }
+
 .gallery-preview .gallery-item {
     position: relative;
     border-radius: 12px;

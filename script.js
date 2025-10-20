@@ -179,6 +179,7 @@ class SPARouter {
     // Initialize home page functionality
     if (route === 'home') {
       this.updateHomeGallery();
+      this.initInstagramFeed();
     }
     
     // Initialize subnav if on hizmetler page
@@ -499,6 +500,57 @@ const carouselEl = document.querySelector('.carousel');
         this.navigateTo('hizmetler', true, hash || null);
       });
     });
+  }
+
+  // Initialize Instagram feed (JS-only via third-party widget)
+  initInstagramFeed() {
+    const widgetContainer = document.getElementById('instagram-widget');
+    if (!widgetContainer) return;
+
+    const provider = widgetContainer.getAttribute('data-provider') || 'elfsight';
+    if (provider !== 'elfsight') return; // currently only elfsight supported
+
+    const configuredId = widgetContainer.getAttribute('data-widget-id') || (window.INSTAGRAM_WIDGET_ID || '');
+
+    // If no widget ID configured, keep fallback visible
+    if (!configuredId || configuredId.trim() === '') return;
+
+    // Add provider-specific class only once
+    const hasClass = Array.from(widgetContainer.classList).some(c => c.startsWith('elfsight-app-'));
+    if (!hasClass) {
+      widgetContainer.classList.add(`elfsight-app-${configuredId}`);
+      widgetContainer.setAttribute('data-elfsight-app-lazy', '');
+    }
+
+    // Hide fallback when content is injected
+    const fallbackEl = widgetContainer.querySelector('.insta-fallback');
+    const maybeHideFallback = () => {
+      if (!fallbackEl) return;
+      const hasExtraChildren = widgetContainer.children.length > 1;
+      if (hasExtraChildren) {
+        fallbackEl.style.display = 'none';
+      }
+    };
+    maybeHideFallback();
+    const observer = new MutationObserver(() => {
+      maybeHideFallback();
+      // Stop observing once content appears
+      if (widgetContainer.children.length > 1) observer.disconnect();
+    });
+    observer.observe(widgetContainer, { childList: true, subtree: true });
+
+    // Ensure platform script is loaded once
+    const existingScript = document.querySelector('script[src^="https://static.elfsight.com/platform/platform.js"]');
+    if (!existingScript) {
+      const s = document.createElement('script');
+      s.src = 'https://static.elfsight.com/platform/platform.js';
+      s.async = true;
+      s.defer = true;
+      s.setAttribute('data-elfsight-platform', 'true');
+      document.head.appendChild(s);
+    } else if (window.ELFSIGHT_APP_INSTANCE && typeof window.ELFSIGHT_APP_INSTANCE.init === 'function') {
+      try { window.ELFSIGHT_APP_INSTANCE.init(); } catch (_) { /* ignore */ }
+    }
   }
 
 }
