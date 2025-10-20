@@ -24,7 +24,7 @@ class ImageCategorizer {
 
     // Subcategory navigation keywords used to derive nested subnav and filtering
     this.subcategoryKeywords = {
-      tabela: ['vinyl', 'kutuharf', 'CNC', 'kompozit', 'forex', 'pilon' ,'totem'],
+      tabela: ['vinyl', 'kutuharf', 'cnc', 'kompozit', 'forex', 'pilon' ,'totem'],
       baski: ['folyo', 'poster', 'afis'],
       arac: ['tam', 'kismi'],
       promosyon: ['ajanda', 'kalem', 'kupa', 'çakmak'],
