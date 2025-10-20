@@ -344,10 +344,6 @@ const carouselEl = document.querySelector('.carousel');
           }
           renderSecondary(currentCategory, sub);
           renderGallery(currentCategory, sub);
-          if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches && sidebarEl && toggleBtn) {
-            sidebarEl.classList.remove('open');
-            toggleBtn.setAttribute('aria-expanded', 'false');
-          }
         });
       });
     };
