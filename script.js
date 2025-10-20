@@ -56,7 +56,8 @@ class SPARouter {
     // Handle browser back/forward buttons
     window.addEventListener('popstate', (e) => {
       const route = e.state?.route || 'home';
-      this.navigateTo(route, false);
+      const hash = e.state?.hash || null;
+      this.navigateTo(route, false, hash);
     });
 
     // Handle card clicks with route data
@@ -72,10 +73,11 @@ class SPARouter {
   }
 
   handleInitialRoute() {
-    // Check URL hash for initial route
-    const hash = window.location.hash.substring(1);
-    if (hash && ['home', 'hakkimizda', 'hizmetler', 'galeri', 'referanslar', 'iletisim'].includes(hash)) {
-      this.navigateTo(hash, false);
+    // Check URL hash for initial route, supporting sub-hash (e.g., #hizmetler#tabela)
+    const rawHash = window.location.hash.substring(1);
+    const [route, subhash] = rawHash.split('#');
+    if (route && ['home', 'hakkimizda', 'hizmetler', 'galeri', 'referanslar', 'iletisim'].includes(route)) {
+      this.navigateTo(route, false, subhash || null);
     } else {
       this.loadPage('home');
     }
@@ -246,47 +248,97 @@ const carouselEl = document.querySelector('.carousel');
 }
 
 
-// Subnav gallery toggling on Hizmetler page
+// Subnav with secondary filtering on Hizmetler page
   initSubnav(hash = null) {
-const subnavLinks = document.querySelectorAll('.subnav-link');
-    if (subnavLinks.length === 0) return;
-    
-  const galleries = document.querySelectorAll('.gallery');
-    
-    // Function to activate a specific tab
-    const activateTab = (target) => {
-      const targetBtn = document.querySelector(`[data-target="${target}"]`);
-      if (targetBtn) {
-      // Update active button
-      subnavLinks.forEach((b) => {
-          b.classList.toggle('active', b === targetBtn);
-          b.setAttribute('aria-selected', b === targetBtn ? 'true' : 'false');
-      });
-      // Show selected gallery, hide others
-      galleries.forEach((gal) => {
-        const isTarget = gal.getAttribute('data-gallery') === target;
-        gal.classList.toggle('hidden', !isTarget);
-      });
-      // Scroll into view of the first visible gallery
-      const activeGallery = document.querySelector('.gallery:not(.hidden)');
-      if (activeGallery) {
-        activeGallery.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-      }
+    const primaryLinks = document.querySelectorAll('.subnav-link');
+    if (primaryLinks.length === 0) return;
+
+    const secondaryNav = document.getElementById('subcategory-nav');
+    const galleryEl = document.getElementById('gallery');
+
+    const isImagesReady = () => Boolean(window.imageCategories);
+
+    const getCategoryImages = (category) => {
+      const images = (window.imageCategories && window.imageCategories[category]) || [];
+      return images;
     };
-    
-    // Activate tab from hash if provided
-    if (hash && ['tabela', 'baski', 'arac'].includes(hash)) {
-      activateTab(hash);
-    }
-    
-    // Add click event listeners
-    subnavLinks.forEach((btn) => {
+
+    const getSubcategories = (category) => {
+      const subcats = new Set();
+      getCategoryImages(category).forEach((img) => {
+        if (img && img.subcategory) subcats.add(img.subcategory);
+      });
+      return Array.from(subcats);
+    };
+
+    let currentCategory = (hash && Array.from(primaryLinks).some(b => b.getAttribute('data-target') === hash))
+      ? hash
+      : (primaryLinks[0]?.getAttribute('data-target') || 'tabela');
+
+    const renderGallery = (category, subcat = 'tumu') => {
+      if (!galleryEl) return;
+      const images = getCategoryImages(category).filter(img => subcat === 'tumu' || img.subcategory === subcat);
+      galleryEl.innerHTML = images.map((image) => (
+        `<div class="gallery-item"><img src="${image.path}" alt="${image.name || category}"></div>`
+      )).join('');
+      galleryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    const renderSecondary = (category, activeSub = 'tumu') => {
+      if (!secondaryNav) return;
+      const subcats = getSubcategories(category);
+      const items = ['tumu', ...subcats];
+      secondaryNav.innerHTML = items.map(sc => (
+        `<button class="subnav-link ${sc === activeSub ? 'active' : ''}" data-subcat="${sc}" role="tab" aria-selected="${sc === activeSub}">`
+        + `${sc === 'tumu' ? 'Tümü' : sc.replace(/-/g, ' ')}`
+        + `</button>`
+      )).join('');
+
+      secondaryNav.querySelectorAll('button[data-subcat]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const chosen = btn.getAttribute('data-subcat');
+          secondaryNav.querySelectorAll('button[data-subcat]').forEach(b => {
+            const isActive = b === btn;
+            b.classList.toggle('active', isActive);
+            b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          });
+          renderGallery(currentCategory, chosen);
+        });
+      });
+    };
+
+    const setActiveCategory = (category) => {
+      currentCategory = category;
+      primaryLinks.forEach((b) => {
+        const isActive = b.getAttribute('data-target') === category;
+        b.classList.toggle('active', isActive);
+        b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+      // Reflect selected category in URL hash
+      window.history.pushState({ route: 'hizmetler', hash: category }, '', `#hizmetler#${category}`);
+      renderSecondary(category, 'tumu');
+      renderGallery(category, 'tumu');
+    };
+
+    primaryLinks.forEach((btn) => {
       btn.addEventListener('click', () => {
         const target = btn.getAttribute('data-target');
-        activateTab(target);
+        if (target) setActiveCategory(target);
       });
     });
+
+    if (!isImagesReady()) {
+      const onReady = () => {
+        window.removeEventListener('imageCategorizationComplete', onReady);
+        setActiveCategory(currentCategory);
+      };
+      window.addEventListener('imageCategorizationComplete', onReady);
+      // Render UI placeholders immediately
+      setActiveCategory(currentCategory);
+      return;
+    }
+
+    setActiveCategory(currentCategory);
   }
 
   // Update home gallery with categorized images
@@ -298,11 +350,14 @@ const subnavLinks = document.querySelectorAll('.subnav-link');
     galleryPreview.innerHTML = '';
 
     // Get random images from each category
-    const categories = ['tabela', 'baski', 'arac'];
+    const categories = ['tabela', 'baski', 'arac', 'promosyon', 'plaket', 'hediye'];
     const categoryNames = {
       tabela: 'Tabela Üretimi',
       baski: 'Dijital Baskı',
-      arac: 'Araç Kaplama'
+      arac: 'Araç Kaplama',
+      promosyon: 'Promosyon',
+      plaket: 'Plaket',
+      hediye: 'Hediye'
     };
 
     categories.forEach(category => {
@@ -314,6 +369,8 @@ const subnavLinks = document.querySelectorAll('.subnav-link');
         randomImages.forEach(image => {
           const galleryItem = document.createElement('div');
           galleryItem.className = 'gallery-item';
+          galleryItem.setAttribute('data-route', 'hizmetler');
+          galleryItem.setAttribute('data-hash', category);
           galleryItem.innerHTML = `
             <img src="${image.path}" alt="${categoryNames[category]}">
             <div class="gallery-overlay">
@@ -341,7 +398,8 @@ const subnavLinks = document.querySelectorAll('.subnav-link');
     const galleryItems = document.querySelectorAll('.gallery-preview .gallery-item');
     galleryItems.forEach(item => {
       item.addEventListener('click', () => {
-        this.navigateTo('hizmetler');
+        const hash = item.getAttribute('data-hash');
+        this.navigateTo('hizmetler', true, hash || null);
       });
     });
   }
