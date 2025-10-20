@@ -281,6 +281,7 @@ const carouselEl = document.querySelector('.carousel');
     let currentCategory = (hash && Array.from(primaryLinks).some(b => b.getAttribute('data-target') === hash))
       ? hash
       : (primaryLinks[0]?.getAttribute('data-target') || 'tabela');
+    let currentSubcategory = null;
 
     const categoryDisplayNames = {
       tabela: 'Tabela',
@@ -317,9 +318,11 @@ const carouselEl = document.querySelector('.carousel');
 
       mobileNestedNav.innerHTML = allPrimaryCategories.map(cat => {
         const openAttr = cat === activeCategory ? ' open' : '';
+        const title = categoryDisplayNames[cat] || cat;
+        const suffix = (cat === activeCategory && activeSub) ? ` — ${activeSub.replace(/-/g, ' ')}` : '';
         return `
           <details class="nested-group" data-cat="${cat}"${openAttr}>
-            <summary>${categoryDisplayNames[cat] || cat}</summary>
+            <summary>${title}${suffix}</summary>
             ${getSubcatButtons(cat, cat === activeCategory ? activeSub : null)}
           </details>
         `;
@@ -340,10 +343,13 @@ const carouselEl = document.querySelector('.carousel');
           const sub = btn.getAttribute('data-subcat');
           if (!parent || !sub) return;
           if (parent !== currentCategory) {
-            setActiveCategory(parent);
+            setActiveCategory(parent, sub);
+          } else {
+            renderSecondary(currentCategory, sub);
+            renderGallery(currentCategory, sub);
+            currentSubcategory = sub;
+            renderMobileNestedUI(currentCategory, sub);
           }
-          renderSecondary(currentCategory, sub);
-          renderGallery(currentCategory, sub);
         });
       });
     };
@@ -374,13 +380,15 @@ const carouselEl = document.querySelector('.carousel');
             b.setAttribute('aria-selected', isActive ? 'true' : 'false');
           });
           renderGallery(currentCategory, chosen);
+          currentSubcategory = chosen;
+          renderMobileNestedUI(currentCategory, chosen);
         });
       });
 
       return activeSub;
     };
 
-    const setActiveCategory = (category) => {
+    const setActiveCategory = (category, preferredSub = null) => {
       currentCategory = category;
       primaryLinks.forEach((b) => {
         const isActive = b.getAttribute('data-target') === category;
@@ -389,7 +397,8 @@ const carouselEl = document.querySelector('.carousel');
       });
       // Reflect selected category in URL hash
       window.history.pushState({ route: 'hizmetler', hash: category }, '', `#hizmetler#${category}`);
-      const activeSub = renderSecondary(category, null);
+      const activeSub = renderSecondary(category, preferredSub);
+      currentSubcategory = activeSub;
       renderGallery(category, activeSub);
       renderMobileNestedUI(currentCategory, activeSub);
     };
