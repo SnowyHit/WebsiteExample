@@ -64,6 +64,23 @@ body {
     border-radius: 8px;
 }
 
+/* Match hizmetler nav buttons to site theme */
+.hizmetler-sidebar .subnav-link {
+    background: #f3f4f6;
+    color: #111;
+    border: 1px solid #e5e7eb;
+}
+.hizmetler-sidebar .subnav-link:hover {
+    background: #e5e7eb;
+    border-color: #d1d5db;
+}
+.hizmetler-sidebar .subnav-link.active {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    color: #fff;
+    border-color: #dc2626;
+    box-shadow: 0 2px 10px rgba(220, 38, 38, 0.25);
+}
+
 .mobile-nested-nav { display: none; }
 
 /* Mobile: collapse sidebar and show nested structure */
@@ -72,10 +89,11 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .sidebar-toggle { display: inline-block; }
+  /* Always show categories; toggle button removed */
+  .sidebar-toggle { display: none; }
 
-  .hizmetler-sidebar .side-nav { display: none; padding: 8px; }
-  .hizmetler-sidebar.open .side-nav { display: block; }
+  /* Keep side-nav visible on mobile */
+  .hizmetler-sidebar .side-nav { display: block; padding: 8px; }
 
   /* Hide separate subnav rows on mobile; use nested view instead */
   .hizmetler-sidebar .subnav,
