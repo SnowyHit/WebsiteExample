@@ -299,7 +299,6 @@ const carouselEl = document.querySelector('.carousel');
       galleryEl.innerHTML = images.map((image) => (
         `<div class="gallery-item"><img src="${image.path}" alt="${image.name || category}"></div>`
       )).join('');
-      galleryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
     const renderMobileNestedUI = (activeCategory, activeSub = null) => {
