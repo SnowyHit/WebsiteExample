@@ -47,20 +47,26 @@ class ImageCategorizer {
 
   getKnownImages() {
     return [
-      // Tabela images
       { name: 'tabela_Orta_1400865271.jpg', path: 'img/Ürünler/tabela_Orta_1400865271.jpg' },
       { name: 'tabela_Orta_1486538658.jpg', path: 'img/Ürünler/tabela_Orta_1486538658.jpg' },
       { name: 'tabela_Orta_1488521005.jpg', path: 'img/Ürünler/tabela_Orta_1488521005.jpg' },
-      
-      // Baskı images
       { name: 'baski_Orta_1402578914.jpg', path: 'img/Ürünler/baski_Orta_1402578914.jpg' },
       { name: 'baski_Orta_1486480855.jpg', path: 'img/Ürünler/baski_Orta_1486480855.jpg' },
       { name: 'baski_Orta_1486537357.jpg', path: 'img/Ürünler/baski_Orta_1486537357.jpg' },
-      
-      // Araç images
       { name: 'arac_Orta_1486482356.jpg', path: 'img/Ürünler/arac_Orta_1486482356.jpg' },
       { name: 'arac_Orta_1486483109.jpg', path: 'img/Ürünler/arac_Orta_1486483109.jpg' },
       { name: 'arac_Orta_1486535081.jpg', path: 'img/Ürünler/arac_Orta_1486535081.jpg' },
+      // New images
+      { name: 'tabela_Orta_1488521005.jpg', path: 'img/Ürünler/tabela_Orta_1486538658 copy.jpg' },
+      { name: 'tabela_Orta_1488521005.jpg', path: 'img/Ürünler/tabela_Orta_1400865271 copy.jpg' },
+      { name: 'baski_Orta_1486480855 copy.jpg', path: 'img/Ürünler/baski_Orta_1486480855 copy.jpg' },
+      
+      { name: 'promosyon_1.jpg', path: 'img/Ürünler/promosyon_1.jpg' },
+      { name: 'promosyon_2.jpg', path: 'img/Ürünler/promosyon_2.jpg' },
+      
+      { name: 'plaket_1.jpg', path: 'img/Ürünler/plaket_1.jpg' },
+      
+      { name: 'hediye_1.jpg', path: 'img/Ürünler/hediye_1.jpg' },
       
       // Slide images
       { name: '1.jpg', path: 'img/Slide/1.jpg' },
