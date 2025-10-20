@@ -50,6 +50,22 @@ class SPARouter {
         this.navigateTo(route);
       });
     });
+    // Mobile hamburger toggle
+    const hamburger = document.querySelector('.hamburger');
+    const siteNav = document.getElementById('site-nav');
+    if (hamburger && siteNav) {
+      hamburger.addEventListener('click', () => {
+        const isOpen = siteNav.classList.toggle('is-open');
+        hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+      // Close on link click for better UX
+      siteNav.querySelectorAll('a[data-route]').forEach(a => {
+        a.addEventListener('click', () => {
+          siteNav.classList.remove('is-open');
+          hamburger.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
   }
 
   setupEventListeners() {
@@ -110,6 +126,13 @@ class SPARouter {
       const isActive = link.getAttribute('data-route') === route;
       link.classList.toggle('active', isActive);
     });
+    // Route-scoped styling for mobile header nav
+    document.body.setAttribute('data-route', route);
+    // Ensure mobile nav is closed on route change
+    const siteNav = document.getElementById('site-nav');
+    if (siteNav) siteNav.classList.remove('is-open');
+    const hamburger = document.querySelector('.hamburger');
+    if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
   }
 
   async loadPage(route, hash = null) {

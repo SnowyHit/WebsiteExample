@@ -12,6 +12,7 @@ header {
     padding: 20px;
     text-align: center;
     border-bottom: 3px solid #000;
+    position: relative;
 }
 
 .logo-container {
@@ -47,6 +48,58 @@ nav a.active {
     color: #fff;
     font-weight: bold;
     border-radius: 4px;
+}
+
+/* Hamburger button */
+.hamburger {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    width: 40px;
+    height: 36px;
+    display: none; /* shown on mobile for certain routes */
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+.hamburger-line {
+    width: 26px;
+    height: 3px;
+    background: #fff;
+    border-radius: 2px;
+}
+
+/* Mobile hamburger nav behavior for hizmetler page only */
+body[data-route="hizmetler"] .hamburger {
+    display: none;
+}
+body[data-route="hizmetler"] nav {
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    body[data-route="hizmetler"] .hamburger {
+        display: flex;
+    }
+    body[data-route="hizmetler"] nav {
+        flex-direction: column;
+        align-items: stretch;
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+    }
+    body[data-route="hizmetler"] nav.is-open {
+        max-height: 300px;
+        opacity: 1;
+    }
+    body[data-route="hizmetler"] nav a {
+        padding: 12px 16px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+    }
 }
 
 
