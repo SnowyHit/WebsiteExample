@@ -24,12 +24,12 @@ class ImageCategorizer {
 
     // Subcategory navigation keywords used to derive nested subnav and filtering
     this.subcategoryKeywords = {
-      tabela: ['isikli', 'kutu-harf', 'yonlendirme', 'totem', 'cephe'],
-      baski: ['vinil', 'poster', 'afis', 'folyo', 'sticker'],
-      arac: ['tam', 'kismi', 'cam-filmi', 'koruma'],
-      promosyon: ['ajanda', 'kalem', 'kupa', 'usb'],
-      plaket: ['ahsap', 'kristal', 'metal'],
-      hediye: ['kisiye-ozel', 'magnet', 'fotograf']
+      tabela: ['vinyl', 'kutuharf', 'CNC', 'kompozit', 'forex', 'pilon' ,'totem'],
+      baski: ['folyo', 'poster', 'afis'],
+      arac: ['tam', 'kismi'],
+      promosyon: ['ajanda', 'kalem', 'kupa', 'çakmak'],
+      plaket: ['kadife', 'gümüş', 'kristal'],
+      hediye: []
     };
 
     this.init();
@@ -42,39 +42,35 @@ class ImageCategorizer {
   }
 
   loadImagesFromStructure() {
-    // Load images based on the actual file structure in img folder
-    // This will automatically detect any new images you upload
     this.loadKnownImages();
-    
-    // Log instructions for adding new images
-    console.log('📁 Image Categorization System Active');
-    console.log('📋 To add new images:');
-    console.log('   • Upload images to img/Ürünler/ for service images');
-    console.log('   • Upload images to img/Slide/ for carousel images');
-    console.log('   • Images are automatically categorized by filename and path');
-    console.log('   • Supported formats: .jpg, .jpeg, .png, .webp');
   }
 
   getKnownImages() {
-    const items = [];
-    const add = (name, path) => items.push({ name, path });
-
-    // Generate images using navigation keywords per category
-    const subMap = this.subcategoryKeywords || {};
-    for (const [category, subcats] of Object.entries(subMap)) {
-      subcats.forEach((subcat) => {
-        for (let i = 1; i <= 2; i += 1) {
-          const file = `${category}-${subcat}-${i}.jpg`;
-          add(file, `img/Ürünler/${file}`);
-        }
-      });
-    }
-
-    // Slide images remain named 1-7 and hero
-    for (let i = 1; i <= 7; i += 1) add(`${i}.jpg`, `img/Slide/${i}.jpg`);
-    add('hero.jpg', 'img/hero.jpg');
-
-    return items;
+    return [
+      { name: 'arac-kismi-2', path: 'img/Ürünler/arac-kismi-2' },
+      { name: 'arac-kismi-3', path: 'img/Ürünler/arac-kismi-3' },
+      { name: 'arac-tam-1', path: 'img/Ürünler/arac-tam-1' },
+      { name: 'baski-afis-3', path: 'img/Ürünler/baski-afis-3' },
+      { name: 'baski-afis-4', path: 'img/Ürünler/baski-afis-4' },
+      { name: 'baski-folyo-1', path: 'img/Ürünler/baski-folyo-1' },
+      { name: 'baski-poster-2', path: 'img/Ürünler/baski-poster-2' },
+      { name: 'hediye-1', path: 'img/Ürünler/hediye-1' },
+      { name: 'plaket-gümüş-2', path: 'img/Ürünler/plaket-gümüş-2' },
+      { name: 'plaket-kadife-1', path: 'img/Ürünler/plaket-kadife-1' },
+      { name: 'plaket-kristal-3', path: 'img/Ürünler/plaket-kristal-3' },
+      { name: 'promosyon-ajanda-3', path: 'img/Ürünler/promosyon-ajanda-3' },
+      { name: 'promosyon-çakmak-2', path: 'img/Ürünler/promosyon-çakmak-2' },
+      { name: 'promosyon-kalem-1', path: 'img/Ürünler/promosyon-kalem-1' },
+      { name: 'promosyon-kupa-2', path: 'img/Ürünler/promosyon-kupa-2' },
+      { name: 'tabela-CNC-3', path: 'img/Ürünler/tabela-CNC-3' },
+      { name: 'tabela-forex-1', path: 'img/Ürünler/tabela-forex-1' },
+      { name: 'tabela-kompozit-2', path: 'img/Ürünler/tabela-kompozit-2' },
+      { name: 'tabela-kompozit-8', path: 'img/Ürünler/tabela-kompozit-8' },
+      { name: 'tabela-kutuharf-4', path: 'img/Ürünler/tabela-kutuharf-4' },
+      { name: 'tabela-pilon-6', path: 'img/Ürünler/tabela-pilon-6' },
+      { name: 'tabela-totem-7', path: 'img/Ürünler/tabela-totem-7' },
+      { name: 'tabela-vinyl-5', path: 'img/Ürünler/tabela-vinyl-5' },
+    ];
   }
 
   loadKnownImages() {
@@ -118,16 +114,6 @@ class ImageCategorizer {
           return category;
         }
       }
-    }
-
-    // Check for image number patterns (fallback categorization)
-    const imageNumber = fileName.match(/\d+/);
-    if (imageNumber) {
-      const num = parseInt(imageNumber[0]);
-      // Simple distribution based on image numbers
-      if (num >= 1400000000 && num < 1401000000) return 'arac';
-      if (num >= 1486480000 && num < 1486490000) return 'tabela';
-      if (num >= 1486530000 && num < 1486540000) return 'baski';
     }
 
     return 'other';
