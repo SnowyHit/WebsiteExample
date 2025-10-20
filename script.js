@@ -248,7 +248,7 @@ const carouselEl = document.querySelector('.carousel');
 }
 
 
-// Subnav with secondary filtering on Hizmetler page
+  // Subnav with secondary filtering on Hizmetler page
   initSubnav(hash = null) {
     const primaryLinks = document.querySelectorAll('.subnav-link');
     if (primaryLinks.length === 0) return;
@@ -271,26 +271,38 @@ const carouselEl = document.querySelector('.carousel');
       return Array.from(subcats);
     };
 
+    const shuffleArray = (arr) => {
+      return [...arr].sort(() => 0.5 - Math.random());
+    };
+
     let currentCategory = (hash && Array.from(primaryLinks).some(b => b.getAttribute('data-target') === hash))
       ? hash
       : (primaryLinks[0]?.getAttribute('data-target') || 'tabela');
 
-    const renderGallery = (category, subcat = 'tumu') => {
+    const renderGallery = (category, subcat) => {
       if (!galleryEl) return;
-      const images = getCategoryImages(category).filter(img => subcat === 'tumu' || img.subcategory === subcat);
+      const images = getCategoryImages(category).filter(img => !subcat || img.subcategory === subcat);
       galleryEl.innerHTML = images.map((image) => (
         `<div class="gallery-item"><img src="${image.path}" alt="${image.name || category}"></div>`
       )).join('');
       galleryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
 
-    const renderSecondary = (category, activeSub = 'tumu') => {
-      if (!secondaryNav) return;
+    const renderSecondary = (category, preferredActiveSub = null) => {
+      if (!secondaryNav) return null;
       const subcats = getSubcategories(category);
-      const items = ['tumu', ...subcats];
-      secondaryNav.innerHTML = items.map(sc => (
+      const randomThree = shuffleArray(subcats).slice(0, 3);
+
+      if (randomThree.length === 0) {
+        secondaryNav.innerHTML = '';
+        return null;
+      }
+
+      const activeSub = randomThree.includes(preferredActiveSub) ? preferredActiveSub : randomThree[0];
+
+      secondaryNav.innerHTML = randomThree.map(sc => (
         `<button class="subnav-link ${sc === activeSub ? 'active' : ''}" data-subcat="${sc}" role="tab" aria-selected="${sc === activeSub}">`
-        + `${sc === 'tumu' ? 'Tümü' : sc.replace(/-/g, ' ')}`
+        + `${sc.replace(/-/g, ' ')}`
         + `</button>`
       )).join('');
 
@@ -305,6 +317,8 @@ const carouselEl = document.querySelector('.carousel');
           renderGallery(currentCategory, chosen);
         });
       });
+
+      return activeSub;
     };
 
     const setActiveCategory = (category) => {
@@ -316,8 +330,8 @@ const carouselEl = document.querySelector('.carousel');
       });
       // Reflect selected category in URL hash
       window.history.pushState({ route: 'hizmetler', hash: category }, '', `#hizmetler#${category}`);
-      renderSecondary(category, 'tumu');
-      renderGallery(category, 'tumu');
+      const activeSub = renderSecondary(category, null);
+      renderGallery(category, activeSub);
     };
 
     primaryLinks.forEach((btn) => {

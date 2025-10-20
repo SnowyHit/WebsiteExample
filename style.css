@@ -138,12 +138,20 @@ footer {
     gap: 10px;
     justify-content: center;
     margin: 10px 0 24px 0;
+    flex-wrap: nowrap; /* keep on one line by default */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+}
+.subnav::-webkit-scrollbar { /* Chrome/Safari */
+    display: none;
 }
 .subnav-secondary {
     flex-wrap: wrap;
     gap: 8px;
     margin-top: -6px;
     margin-bottom: 24px;
+    justify-content: flex-start;
 }
 .subnav-link {
     background: #eee;
@@ -153,6 +161,7 @@ footer {
     border-radius: 20px;
     cursor: pointer;
     transition: all 0.2s ease;
+    white-space: nowrap;
 }
 .subnav-secondary .subnav-link {
     padding: 6px 12px;
@@ -483,6 +492,34 @@ footer {
 
 /* Mobile responsiveness */
 @media (max-width: 768px) {
+    /* Primary subnav becomes horizontally scrollable, left-aligned */
+    .subnav {
+        justify-content: flex-start;
+        gap: 8px;
+        padding: 6px 4px;
+        scroll-snap-type: x mandatory;
+    }
+    .subnav .subnav-link {
+        scroll-snap-align: start;
+        padding: 10px 14px;
+        font-size: 0.95rem;
+    }
+
+    /* Secondary subnav appears as nested row under primary */
+    .subnav-secondary {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 8px;
+        margin-top: 4px;
+        padding-left: 10px;
+        border-left: 3px solid #f0f0f0;
+        scroll-snap-type: x proximity;
+    }
+    .subnav-secondary .subnav-link {
+        scroll-snap-align: start;
+        font-size: 0.9rem;
+        padding: 8px 12px;
+    }
     .logo {
         height: 200px;
     }
@@ -539,6 +576,25 @@ footer {
 }
 
 @media (max-width: 480px) {
+    .subnav {
+        gap: 6px;
+        padding: 6px 2px;
+    }
+    .subnav .subnav-link {
+        font-size: 0.85rem;
+        padding: 8px 12px;
+        border-radius: 16px;
+    }
+    .subnav-secondary {
+        gap: 6px;
+        padding-left: 8px;
+        border-left-width: 2px;
+    }
+    .subnav-secondary .subnav-link {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+        border-radius: 14px;
+    }
     .logo {
         height: 150px;
     }

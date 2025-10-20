@@ -21,7 +21,17 @@ class ImageCategorizer {
       arac: ['arac'],
       slide: ['slide', 'hero', 'main', 'banner', 'carousel']
     };
-    
+
+    // Subcategory navigation keywords used to derive nested subnav and filtering
+    this.subcategoryKeywords = {
+      tabela: ['isikli', 'kutu-harf', 'yonlendirme', 'totem', 'cephe'],
+      baski: ['vinil', 'poster', 'afis', 'folyo', 'sticker'],
+      arac: ['tam', 'kismi', 'cam-filmi', 'koruma'],
+      promosyon: ['ajanda', 'kalem', 'kupa', 'usb'],
+      plaket: ['ahsap', 'kristal', 'metal'],
+      hediye: ['kisiye-ozel', 'magnet', 'fotograf']
+    };
+
     this.init();
   }
 
@@ -46,40 +56,25 @@ class ImageCategorizer {
   }
 
   getKnownImages() {
-    return [
-      { name: 'tabela_Orta_1400865271.jpg', path: 'img/Ürünler/tabela_Orta_1400865271.jpg' },
-      { name: 'tabela_Orta_1486538658.jpg', path: 'img/Ürünler/tabela_Orta_1486538658.jpg' },
-      { name: 'tabela_Orta_1488521005.jpg', path: 'img/Ürünler/tabela_Orta_1488521005.jpg' },
-      { name: 'baski_Orta_1402578914.jpg', path: 'img/Ürünler/baski_Orta_1402578914.jpg' },
-      { name: 'baski_Orta_1486480855.jpg', path: 'img/Ürünler/baski_Orta_1486480855.jpg' },
-      { name: 'baski_Orta_1486537357.jpg', path: 'img/Ürünler/baski_Orta_1486537357.jpg' },
-      { name: 'arac_Orta_1486482356.jpg', path: 'img/Ürünler/arac_Orta_1486482356.jpg' },
-      { name: 'arac_Orta_1486483109.jpg', path: 'img/Ürünler/arac_Orta_1486483109.jpg' },
-      { name: 'arac_Orta_1486535081.jpg', path: 'img/Ürünler/arac_Orta_1486535081.jpg' },
-      // Additional images (copies and new categories)
-      { name: 'tabela_Orta_1486538658 copy.jpg', path: 'img/Ürünler/tabela_Orta_1486538658 copy.jpg' },
-      { name: 'tabela_Orta_1400865271 copy.jpg', path: 'img/Ürünler/tabela_Orta_1400865271 copy.jpg' },
-      { name: 'baski_Orta_1486480855 copy.jpg', path: 'img/Ürünler/baski_Orta_1486480855 copy.jpg' },
-      
-      { name: 'promosyon_1.jpg', path: 'img/Ürünler/promosyon_1.jpg' },
-      { name: 'promosyon_2.jpg', path: 'img/Ürünler/promosyon_2.jpg' },
-      
-      { name: 'plaket_1.jpg', path: 'img/Ürünler/plaket_1.jpg' },
-      
-      { name: 'hediye_1.jpg', path: 'img/Ürünler/hediye_1.jpg' },
-      
-      // Slide images
-      { name: '1.jpg', path: 'img/Slide/1.jpg' },
-      { name: '2.jpg', path: 'img/Slide/2.jpg' },
-      { name: '3.jpg', path: 'img/Slide/3.jpg' },
-      { name: '4.jpg', path: 'img/Slide/4.jpg' },
-      { name: '5.jpg', path: 'img/Slide/5.jpg' },
-      { name: '6.jpg', path: 'img/Slide/6.jpg' },
-      { name: '7.jpg', path: 'img/Slide/7.jpg' },
-      
-      // Hero image
-      { name: 'hero.jpg', path: 'img/hero.jpg' }
-    ];
+    const items = [];
+    const add = (name, path) => items.push({ name, path });
+
+    // Generate images using navigation keywords per category
+    const subMap = this.subcategoryKeywords || {};
+    for (const [category, subcats] of Object.entries(subMap)) {
+      subcats.forEach((subcat) => {
+        for (let i = 1; i <= 2; i += 1) {
+          const file = `${category}-${subcat}-${i}.jpg`;
+          add(file, `img/Ürünler/${file}`);
+        }
+      });
+    }
+
+    // Slide images remain named 1-7 and hero
+    for (let i = 1; i <= 7; i += 1) add(`${i}.jpg`, `img/Slide/${i}.jpg`);
+    add('hero.jpg', 'img/hero.jpg');
+
+    return items;
   }
 
   loadKnownImages() {
@@ -91,46 +86,16 @@ class ImageCategorizer {
     });
   }
 
-  assignSubcategory(image) {
+  assignSubcategory(image, resolvedCategory) {
     const name = (image.name || '').toLowerCase();
     const path = (image.path || '').toLowerCase();
-    // Tabela
-    if (name.includes('tabela')) {
-      if (name.includes('1400865271')) return 'isikli';
-      if (name.includes('1486538658')) return 'kutu-harf';
-      if (name.includes('1488521005')) return 'yonlendirme';
-      return 'genel';
-    }
-    // Baskı
-    if (name.includes('baski')) {
-      if (name.includes('1402578914')) return 'vinil';
-      if (name.includes('1486480855')) return 'afis';
-      if (name.includes('1486537357')) return 'poster';
-      return 'genel';
-    }
-    // Araç
-    if (name.includes('arac')) {
-      if (name.includes('1486482356')) return 'kismi';
-      if (name.includes('1486483109')) return 'tam';
-      if (name.includes('1486535081')) return 'cam-filmi';
-      return 'genel';
-    }
-    // Promosyon
-    if (name.includes('promosyon')) {
-      if (name.includes('2')) return 'ajanda';
-      return 'kalem';
-    }
-    // Plaket
-    if (name.includes('plaket')) {
-      return 'ahsap';
-    }
-    // Hediye
-    if (name.includes('hediye')) {
-      return 'kisiye-ozel';
-    }
-    // Slide or other
-    if (path.includes('/slide/') || name.includes('hero')) {
-      return 'genel';
+    // Slides and hero have no specific subcategory
+    if (path.includes('/slide/') || name.includes('hero')) return 'genel';
+
+    const category = resolvedCategory || this.categorizeImage(image);
+    const keywords = (this.subcategoryKeywords && this.subcategoryKeywords[category]) || [];
+    for (const key of keywords) {
+      if (name.includes(key)) return key;
     }
     return 'genel';
   }
