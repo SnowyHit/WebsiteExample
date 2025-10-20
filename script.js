@@ -319,10 +319,10 @@ const carouselEl = document.querySelector('.carousel');
       mobileNestedNav.innerHTML = allPrimaryCategories.map(cat => {
         const openAttr = cat === activeCategory ? ' open' : '';
         const title = categoryDisplayNames[cat] || cat;
-        const suffix = (cat === activeCategory && activeSub) ? ` — ${activeSub.replace(/-/g, ' ')}` : '';
+        // Remove dynamic suffix to keep summary width consistent
         return `
           <details class="nested-group" data-cat="${cat}"${openAttr}>
-            <summary>${title}${suffix}</summary>
+            <summary>${title}</summary>
             ${getSubcatButtons(cat, cat === activeCategory ? activeSub : null)}
           </details>
         `;
