@@ -291,16 +291,15 @@ const carouselEl = document.querySelector('.carousel');
     const renderSecondary = (category, preferredActiveSub = null) => {
       if (!secondaryNav) return null;
       const subcats = getSubcategories(category);
-      const randomThree = shuffleArray(subcats).slice(0, 3);
 
-      if (randomThree.length === 0) {
+      if (subcats.length === 0) {
         secondaryNav.innerHTML = '';
         return null;
       }
 
-      const activeSub = randomThree.includes(preferredActiveSub) ? preferredActiveSub : randomThree[0];
+      const activeSub = subcats.includes(preferredActiveSub) ? preferredActiveSub : subcats[0];
 
-      secondaryNav.innerHTML = randomThree.map(sc => (
+      secondaryNav.innerHTML = subcats.map(sc => (
         `<button class="subnav-link ${sc === activeSub ? 'active' : ''}" data-subcat="${sc}" role="tab" aria-selected="${sc === activeSub}">`
         + `${sc.replace(/-/g, ' ')}`
         + `</button>`
