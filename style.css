@@ -27,21 +27,7 @@ body {
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
-.sidebar-toggle {
-    display: none;
-    width: 100%;
-    margin-bottom: 10px;
-    background: #000;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 12px;
-    font-weight: 600;
-    cursor: pointer;
-}
-.hizmetler-sidebar.open .sidebar-toggle {
-    background: #dc2626;
-}
+/* removed toggle button styles */
 
 /* Verticalize subnavs inside sidebar for larger screens */
 .hizmetler-sidebar .subnav {
@@ -72,16 +58,13 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .sidebar-toggle { display: inline-block; }
+  .hizmetler-sidebar .side-nav { display: block; padding: 8px; }
 
-  .hizmetler-sidebar .side-nav { display: none; padding: 8px; }
-  .hizmetler-sidebar.open .side-nav { display: block; }
-
-  /* Hide separate subnav rows on mobile; use nested view instead */
+  /* Show both vertical lists on mobile as well */
   .hizmetler-sidebar .subnav,
-  .hizmetler-sidebar #subcategory-nav { display: none; }
+  .hizmetler-sidebar #subcategory-nav { display: flex; }
 
-  .mobile-nested-nav { display: block; }
+  .mobile-nested-nav { display: none; }
   .mobile-nested-nav .nested-group {
     margin-bottom: 8px;
     border: 1px solid #eee;

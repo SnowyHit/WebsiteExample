@@ -256,7 +256,6 @@ const carouselEl = document.querySelector('.carousel');
     const secondaryNav = document.getElementById('subcategory-nav');
     const galleryEl = document.getElementById('gallery');
     const sidebarEl = document.querySelector('.hizmetler-sidebar');
-    const toggleBtn = document.querySelector('.sidebar-toggle');
     const mobileNestedNav = document.querySelector('.mobile-nested-nav');
 
     const isImagesReady = () => Boolean(window.imageCategories);
@@ -328,7 +327,7 @@ const carouselEl = document.querySelector('.carousel');
         `;
       }).join('');
 
-      // Wire up events
+      // Wire up events (kept for completeness though hidden in CSS)
       mobileNestedNav.querySelectorAll('summary').forEach((summaryEl) => {
         summaryEl.addEventListener('click', () => {
           const group = summaryEl.parentElement;
@@ -410,12 +409,7 @@ const carouselEl = document.querySelector('.carousel');
       });
     });
 
-    if (toggleBtn && sidebarEl) {
-      toggleBtn.addEventListener('click', () => {
-        const isOpen = sidebarEl.classList.toggle('open');
-        toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      });
-    }
+    // Toggle removed
 
     if (!isImagesReady()) {
       const onReady = () => {
