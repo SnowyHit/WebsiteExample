@@ -1,4 +1,4 @@
-﻿body {
+body {
     font-family: 'Segoe UI', sans-serif;
     margin: 0;
     padding: 0;
@@ -139,6 +139,12 @@ footer {
     justify-content: center;
     margin: 10px 0 24px 0;
 }
+.subnav-secondary {
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: -6px;
+    margin-bottom: 24px;
+}
 .subnav-link {
     background: #eee;
     color: #333;
@@ -147,6 +153,10 @@ footer {
     border-radius: 20px;
     cursor: pointer;
     transition: all 0.2s ease;
+}
+.subnav-secondary .subnav-link {
+    padding: 6px 12px;
+    font-size: 0.9rem;
 }
 .subnav-link:hover {
     background: #e2e2e2;

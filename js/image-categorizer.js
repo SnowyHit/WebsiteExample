@@ -56,9 +56,9 @@ class ImageCategorizer {
       { name: 'arac_Orta_1486482356.jpg', path: 'img/Ürünler/arac_Orta_1486482356.jpg' },
       { name: 'arac_Orta_1486483109.jpg', path: 'img/Ürünler/arac_Orta_1486483109.jpg' },
       { name: 'arac_Orta_1486535081.jpg', path: 'img/Ürünler/arac_Orta_1486535081.jpg' },
-      // New images
-      { name: 'tabela_Orta_1488521005.jpg', path: 'img/Ürünler/tabela_Orta_1486538658 copy.jpg' },
-      { name: 'tabela_Orta_1488521005.jpg', path: 'img/Ürünler/tabela_Orta_1400865271 copy.jpg' },
+      // Additional images (copies and new categories)
+      { name: 'tabela_Orta_1486538658 copy.jpg', path: 'img/Ürünler/tabela_Orta_1486538658 copy.jpg' },
+      { name: 'tabela_Orta_1400865271 copy.jpg', path: 'img/Ürünler/tabela_Orta_1400865271 copy.jpg' },
       { name: 'baski_Orta_1486480855 copy.jpg', path: 'img/Ürünler/baski_Orta_1486480855 copy.jpg' },
       
       { name: 'promosyon_1.jpg', path: 'img/Ürünler/promosyon_1.jpg' },
@@ -86,8 +86,53 @@ class ImageCategorizer {
     const knownImages = this.getKnownImages();
     knownImages.forEach(image => {
       const category = this.categorizeImage(image);
-      this.imageCategories[category].push(image);
+      const subcategory = this.assignSubcategory(image, category);
+      this.imageCategories[category].push({ ...image, subcategory });
     });
+  }
+
+  assignSubcategory(image) {
+    const name = (image.name || '').toLowerCase();
+    const path = (image.path || '').toLowerCase();
+    // Tabela
+    if (name.includes('tabela')) {
+      if (name.includes('1400865271')) return 'isikli';
+      if (name.includes('1486538658')) return 'kutu-harf';
+      if (name.includes('1488521005')) return 'yonlendirme';
+      return 'genel';
+    }
+    // Baskı
+    if (name.includes('baski')) {
+      if (name.includes('1402578914')) return 'vinil';
+      if (name.includes('1486480855')) return 'afis';
+      if (name.includes('1486537357')) return 'poster';
+      return 'genel';
+    }
+    // Araç
+    if (name.includes('arac')) {
+      if (name.includes('1486482356')) return 'kismi';
+      if (name.includes('1486483109')) return 'tam';
+      if (name.includes('1486535081')) return 'cam-filmi';
+      return 'genel';
+    }
+    // Promosyon
+    if (name.includes('promosyon')) {
+      if (name.includes('2')) return 'ajanda';
+      return 'kalem';
+    }
+    // Plaket
+    if (name.includes('plaket')) {
+      return 'ahsap';
+    }
+    // Hediye
+    if (name.includes('hediye')) {
+      return 'kisiye-ozel';
+    }
+    // Slide or other
+    if (path.includes('/slide/') || name.includes('hero')) {
+      return 'genel';
+    }
+    return 'genel';
   }
 
   categorizeImage(image) {
