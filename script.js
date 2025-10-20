@@ -255,6 +255,9 @@ const carouselEl = document.querySelector('.carousel');
 
     const secondaryNav = document.getElementById('subcategory-nav');
     const galleryEl = document.getElementById('gallery');
+    const sidebarEl = document.querySelector('.hizmetler-sidebar');
+    const toggleBtn = document.querySelector('.sidebar-toggle');
+    const mobileNestedNav = document.querySelector('.mobile-nested-nav');
 
     const isImagesReady = () => Boolean(window.imageCategories);
 
@@ -278,6 +281,17 @@ const carouselEl = document.querySelector('.carousel');
     let currentCategory = (hash && Array.from(primaryLinks).some(b => b.getAttribute('data-target') === hash))
       ? hash
       : (primaryLinks[0]?.getAttribute('data-target') || 'tabela');
+    let currentSubcategory = null;
+
+    const categoryDisplayNames = {
+      tabela: 'Tabela',
+      baski: 'Dijital Baskı',
+      arac: 'Araç Kaplama',
+      promosyon: 'Promosyon',
+      plaket: 'Plaket',
+      hediye: 'Hediye'
+    };
+    const allPrimaryCategories = ['tabela', 'baski', 'arac', 'promosyon', 'plaket', 'hediye'];
 
     const renderGallery = (category, subcat) => {
       if (!galleryEl) return;
@@ -286,6 +300,58 @@ const carouselEl = document.querySelector('.carousel');
         `<div class="gallery-item"><img src="${image.path}" alt="${image.name || category}"></div>`
       )).join('');
       galleryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    const renderMobileNestedUI = (activeCategory, activeSub = null) => {
+      if (!mobileNestedNav) return;
+      const getSubcatButtons = (cat, selectedSub) => {
+        const subcats = getSubcategories(cat);
+        if (subcats.length === 0) return '';
+        return `<div class="nested-subcats">${
+          subcats.map(sc => `
+            <button class="nested-subcat-btn ${selectedSub === sc ? 'active' : ''}" data-parent="${cat}" data-subcat="${sc}">
+              ${(sc || '').replace(/-/g, ' ')}
+            </button>
+          `).join('')
+        }</div>`;
+      };
+
+      mobileNestedNav.innerHTML = allPrimaryCategories.map(cat => {
+        const openAttr = cat === activeCategory ? ' open' : '';
+        const title = categoryDisplayNames[cat] || cat;
+        const suffix = (cat === activeCategory && activeSub) ? ` — ${activeSub.replace(/-/g, ' ')}` : '';
+        return `
+          <details class="nested-group" data-cat="${cat}"${openAttr}>
+            <summary>${title}${suffix}</summary>
+            ${getSubcatButtons(cat, cat === activeCategory ? activeSub : null)}
+          </details>
+        `;
+      }).join('');
+
+      // Wire up events
+      mobileNestedNav.querySelectorAll('summary').forEach((summaryEl) => {
+        summaryEl.addEventListener('click', () => {
+          const group = summaryEl.parentElement;
+          const cat = group?.getAttribute('data-cat');
+          if (cat) setActiveCategory(cat);
+        });
+      });
+      mobileNestedNav.querySelectorAll('.nested-subcat-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          const parent = btn.getAttribute('data-parent');
+          const sub = btn.getAttribute('data-subcat');
+          if (!parent || !sub) return;
+          if (parent !== currentCategory) {
+            setActiveCategory(parent, sub);
+          } else {
+            renderSecondary(currentCategory, sub);
+            renderGallery(currentCategory, sub);
+            currentSubcategory = sub;
+            renderMobileNestedUI(currentCategory, sub);
+          }
+        });
+      });
     };
 
     const renderSecondary = (category, preferredActiveSub = null) => {
@@ -314,13 +380,15 @@ const carouselEl = document.querySelector('.carousel');
             b.setAttribute('aria-selected', isActive ? 'true' : 'false');
           });
           renderGallery(currentCategory, chosen);
+          currentSubcategory = chosen;
+          renderMobileNestedUI(currentCategory, chosen);
         });
       });
 
       return activeSub;
     };
 
-    const setActiveCategory = (category) => {
+    const setActiveCategory = (category, preferredSub = null) => {
       currentCategory = category;
       primaryLinks.forEach((b) => {
         const isActive = b.getAttribute('data-target') === category;
@@ -329,8 +397,10 @@ const carouselEl = document.querySelector('.carousel');
       });
       // Reflect selected category in URL hash
       window.history.pushState({ route: 'hizmetler', hash: category }, '', `#hizmetler#${category}`);
-      const activeSub = renderSecondary(category, null);
+      const activeSub = renderSecondary(category, preferredSub);
+      currentSubcategory = activeSub;
       renderGallery(category, activeSub);
+      renderMobileNestedUI(currentCategory, activeSub);
     };
 
     primaryLinks.forEach((btn) => {
@@ -339,6 +409,13 @@ const carouselEl = document.querySelector('.carousel');
         if (target) setActiveCategory(target);
       });
     });
+
+    if (toggleBtn && sidebarEl) {
+      toggleBtn.addEventListener('click', () => {
+        const isOpen = sidebarEl.classList.toggle('open');
+        toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+    }
 
     if (!isImagesReady()) {
       const onReady = () => {

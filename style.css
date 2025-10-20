@@ -6,6 +6,118 @@ body {
     color: #333;
 }
 
+/* Hizmetler page: left sidebar layout for category navigation */
+.hizmetler-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 20px;
+}
+
+.hizmetler-sidebar {
+    position: sticky;
+    top: 16px;
+    align-self: start;
+}
+
+.hizmetler-sidebar .side-nav {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.sidebar-toggle {
+    display: none;
+    width: 100%;
+    margin-bottom: 10px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.hizmetler-sidebar.open .sidebar-toggle {
+    background: #dc2626;
+}
+
+/* Verticalize subnavs inside sidebar for larger screens */
+.hizmetler-sidebar .subnav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    margin: 0 0 12px 0;
+    overflow: visible;
+}
+.hizmetler-sidebar .subnav-secondary {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+}
+.hizmetler-sidebar .subnav-link {
+    width: 100%;
+    text-align: left;
+    border-radius: 8px;
+}
+
+.mobile-nested-nav { display: none; }
+
+/* Mobile: collapse sidebar and show nested structure */
+@media (max-width: 768px) {
+  .hizmetler-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar-toggle { display: inline-block; }
+
+  .hizmetler-sidebar .side-nav { display: none; padding: 8px; }
+  .hizmetler-sidebar.open .side-nav { display: block; }
+
+  /* Hide separate subnav rows on mobile; use nested view instead */
+  .hizmetler-sidebar .subnav,
+  .hizmetler-sidebar #subcategory-nav { display: none; }
+
+  .mobile-nested-nav { display: block; }
+  .mobile-nested-nav .nested-group {
+    margin-bottom: 8px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background: #fafafa;
+    padding: 6px 8px;
+  }
+  .mobile-nested-nav summary {
+    list-style: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: #333;
+  }
+  .mobile-nested-nav details summary::-webkit-details-marker { display: none; }
+  .mobile-nested-nav .nested-subcats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-top: 6px;
+  }
+  .mobile-nested-nav .nested-subcat-btn {
+    background: #eee;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 6px 10px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  .mobile-nested-nav .nested-subcat-btn.active {
+    background: #dc2626;
+    color: #fff;
+    border-color: #dc2626;
+  }
+}
+
 header {
     background: linear-gradient(135deg, #000000, #af1919);
     color: white;

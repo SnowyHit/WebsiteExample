@@ -1,14 +1,23 @@
 <section>
-  <div class="subnav" role="tablist" aria-label="Hizmet Kategorileri">
-    <button class="subnav-link active" data-target="tabela" role="tab" aria-selected="true">Tabela</button>
-    <button class="subnav-link" data-target="baski" role="tab" aria-selected="false">Dijital Baskı</button>
-    <button class="subnav-link" data-target="arac" role="tab" aria-selected="false">Araç Kaplama</button>
-    <button class="subnav-link" data-target="promosyon" role="tab" aria-selected="false">Promosyon</button>
-    <button class="subnav-link" data-target="plaket" role="tab" aria-selected="false">Plaket</button>
-    <button class="subnav-link" data-target="hediye" role="tab" aria-selected="false">Hediye</button>
+  <div class="hizmetler-layout">
+    <aside class="hizmetler-sidebar">
+      <button class="sidebar-toggle" aria-expanded="false" aria-controls="hizmetler-side-nav">Kategoriler</button>
+      <nav id="hizmetler-side-nav" class="side-nav" aria-label="Hizmet Navigasyonu">
+        <div class="subnav" role="tablist" aria-label="Hizmet Kategorileri">
+          <button class="subnav-link active" data-target="tabela" role="tab" aria-selected="true">Tabela</button>
+          <button class="subnav-link" data-target="baski" role="tab" aria-selected="false">Dijital Baskı</button>
+          <button class="subnav-link" data-target="arac" role="tab" aria-selected="false">Araç Kaplama</button>
+          <button class="subnav-link" data-target="promosyon" role="tab" aria-selected="false">Promosyon</button>
+          <button class="subnav-link" data-target="plaket" role="tab" aria-selected="false">Plaket</button>
+          <button class="subnav-link" data-target="hediye" role="tab" aria-selected="false">Hediye</button>
+        </div>
+        <div class="mobile-nested-nav" aria-label="Alt Kategoriler (Mobil)"></div>
+        <div class="subnav subnav-secondary" id="subcategory-nav" role="tablist" aria-label="Alt Kategoriler"></div>
+      </nav>
+    </aside>
+
+    <div class="hizmetler-content">
+      <div class="gallery" id="gallery"></div>
+    </div>
   </div>
-
-  <div class="subnav subnav-secondary" id="subcategory-nav" role="tablist" aria-label="Alt Kategoriler"></div>
-
-  <div class="gallery" id="gallery"></div>
 </section>
