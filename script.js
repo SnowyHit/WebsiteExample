@@ -330,10 +330,22 @@ const carouselEl = document.querySelector('.carousel');
 
       // Wire up events
       mobileNestedNav.querySelectorAll('summary').forEach((summaryEl) => {
-        summaryEl.addEventListener('click', () => {
+        summaryEl.addEventListener('click', (e) => {
+          e.preventDefault();
           const group = summaryEl.parentElement;
           const cat = group?.getAttribute('data-cat');
-          if (cat) setActiveCategory(cat);
+          if (!cat) return;
+          // Toggle open state manually for consistent behavior
+          const willOpen = !group.hasAttribute('open');
+          mobileNestedNav.querySelectorAll('details.nested-group').forEach(d => {
+            if (d !== group) d.removeAttribute('open');
+          });
+          if (willOpen) {
+            group.setAttribute('open', '');
+          } else {
+            group.removeAttribute('open');
+          }
+          setActiveCategory(cat);
         });
       });
       mobileNestedNav.querySelectorAll('.nested-subcat-btn').forEach((btn) => {
